@@ -1,0 +1,50 @@
+﻿1. Entities, Relationships, and Constraints
+Entities:
+1. Branch: Represents each restaurant location.
+  - Attributes: Branch_ID (PK), Branch_Name, Location, Manager_Name, Opening_Hours.
+2. Menu_Item: Represents individual items available on the menu.
+   - Attributes: Item_ID (PK), Item_Name, Category (e.g., Rice, Drink), Price.
+3. Customer: Represents customers who make purchases.
+   - Attributes: Customer_ID (PK), Name, Contact_Info, Membership_Status.
+4. Order: Represents each customer order.
+   - Attributes: Order_ID (PK), Order_Date, Order_Time, Branch_ID (FK), Customer_ID (FK), Payment_Method_ID (FK), Total_Amount.
+5. Payment_Method: Represents different payment methods.
+   - Attributes: Payment_Method_ID (PK), Method_Name (Cash, Debit Card, Online).
+6. Inventory: Represents the stock of items.
+   - Attributes: Inventory_ID (PK), Item_ID (FK), Branch_ID (FK), Stock_Level, Reorder_Level.
+Relationships and Constraints:
+1. Branch to Order: One-to-Many (One branch can have many orders)
+2. Customer to Order: One-to-Many (One customer can place many orders)
+3. Order to Payment_Method: Many-to-One (Many orders can be paid by one payment method)
+4. Menu_Item to Order: Many-to-Many (One order can contain many menu items, and one menu item can appear in many orders) — This is managed through an Order_Item junction table.
+5. Branch to Inventory: One-to-Many (One branch can have many inventory items)
+6. Menu_Item to Inventory: One-to-Many (One menu item can have multiple inventory records across different branches)
+2. Dimensional Model
+Business Process: Order Processing and Sales Analysis
+Business Questions:
+1. What are the sales trends by location and payment method over the past year?
+2. How does the demand for menu items vary by time of day and branch?
+3. What are the most popular menu items for different customer segments?
+Dimensional Model:
+- Fact Table: Sales_Fact
+  - Grain: Individual Order Item (Each item in an order is a separate record in the fact table)
+  - Measures: Quantity_Sold, Total_Sales_Amount
+- Dimensions:
+  1. Time_Dimension: Captures time-related attributes.
+     - Attributes: Date, Week, Month, Quarter, Year, Day_of_Week
+  2. Branch_Dimension: Captures details about each branch.
+     - Attributes: Branch_ID, Branch_Name, Location, Manager_Name
+  3. Menu_Item_Dimension: Captures details about menu items.
+     - Attributes: Item_ID, Item_Name, Category, Price
+  4. Customer_Dimension: Captures customer details.
+     - Attributes: Customer_ID, Name, Contact_Info, Membership_Status
+  5. Payment_Method_Dimension: Captures payment methods.
+     - Attributes: Payment_Method_ID, Method_Name
+Schema Diagram:
+- Sales_Fact (Order_ID, Item_ID, Branch_ID, Customer_ID, Payment_Method_ID, Date, Quantity_Sold, Total_Sales_Amount)
+  - Links to:
+    - Time_Dimension (Date)
+    - Branch_Dimension (Branch_ID)
+    - Menu_Item_Dimension (Item_ID)
+    - Customer_Dimension (Customer_ID)
+    - Payment_Method_Dimension (Payment_Method_ID)
